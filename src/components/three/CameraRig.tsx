@@ -54,6 +54,9 @@ export function CameraRig() {
       if (focusTarget) {
         next.copy(focusTarget);
         focusing = true;
+      } else {
+        // Unknown project id — drop the command so it can't linger.
+        useAppStore.getState().clearSceneCommand();
       }
     }
 
