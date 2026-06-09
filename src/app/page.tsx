@@ -1,46 +1,93 @@
 import { bio } from "@/content/bio";
+import { Section } from "@/components/section";
+import { Reveal } from "@/components/reveal";
 
 export default function Home() {
   return (
-    <section
-      aria-labelledby="hero-heading"
-      className="relative mx-auto flex min-h-[calc(100dvh-65px)] w-full max-w-5xl flex-col justify-center px-6 py-24"
-    >
-      <p className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-border bg-surface/60 px-3 py-1 font-mono text-xs text-muted">
-        <span className="size-1.5 rounded-full bg-accent" />
-        Phase 0 scaffold — sections land in the phases ahead
-      </p>
-
-      <h1
-        id="hero-heading"
-        className="max-w-3xl text-balance text-5xl font-semibold leading-[1.05] tracking-tight sm:text-6xl md:text-7xl"
+    <>
+      <Section
+        id="hero"
+        aria-labelledby="hero-heading"
+        className="relative mx-auto flex min-h-[calc(100dvh-65px)] w-full max-w-5xl flex-col justify-center px-6 py-24"
       >
-        {bio.tagline}
-      </h1>
+        <p className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-border bg-surface/60 px-3 py-1 font-mono text-xs text-muted">
+          <span className="size-1.5 rounded-full bg-accent" />
+          Phase 1 — smooth-scroll motion bus
+        </p>
 
-      <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
-        {bio.name} — {bio.role}
-      </p>
-
-      <div className="mt-10 flex flex-wrap gap-3">
-        <a
-          href={`mailto:${bio.email}`}
-          className="inline-flex h-11 items-center justify-center rounded-full bg-accent px-6 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        <h1
+          id="hero-heading"
+          className="max-w-3xl text-balance text-5xl font-semibold leading-[1.05] tracking-tight sm:text-6xl md:text-7xl"
         >
-          Get in touch
-        </a>
-        {bio.socials.map((s) => (
+          {bio.tagline}
+        </h1>
+
+        <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
+          {bio.name} — {bio.role}
+        </p>
+
+        <div className="mt-10 flex flex-wrap gap-3">
           <a
-            key={s.label}
-            href={s.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-11 items-center justify-center rounded-full border border-border px-6 text-sm font-medium text-foreground/80 transition-colors hover:bg-surface hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            href={`mailto:${bio.email}`}
+            className="inline-flex h-11 items-center justify-center rounded-full bg-accent px-6 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
-            {s.label}
+            Get in touch
           </a>
+          {bio.socials.map((s) => (
+            <a
+              key={s.label}
+              href={s.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-11 items-center justify-center rounded-full border border-border px-6 text-sm font-medium text-foreground/80 transition-colors hover:bg-surface hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            >
+              {s.label}
+            </a>
+          ))}
+        </div>
+
+        <p className="mt-16 animate-pulse text-sm text-muted">Scroll ↓</p>
+      </Section>
+
+      {/* Demo content proving scroll-reveal + activeSection tracking.
+          Real sections (Work / About / Contact) arrive in Phase 3. */}
+      <Section
+        id="explore"
+        aria-label="Demo section"
+        className="mx-auto w-full max-w-5xl space-y-24 px-6 py-32"
+      >
+        {[
+          {
+            kicker: "Motion bus",
+            title: "One scroll source",
+            body: "Lenis drives a single smooth-scroll loop through GSAP's ticker; ScrollTrigger stays perfectly in sync. The store's scrollProgress and activeSection update live as you move.",
+          },
+          {
+            kicker: "Reduced motion",
+            title: "Respects your preference",
+            body: "With prefers-reduced-motion enabled, smooth scroll and these reveals switch off entirely — the content simply appears, fully readable.",
+          },
+          {
+            kicker: "What's next",
+            title: "A 3D hero rides this bus",
+            body: "In Phase 2 the lazy R3F scene reads scrollProgress in useFrame to move the camera — without ever owning scroll.",
+          },
+        ].map((block, i) => (
+          <Reveal key={block.title} delaySeconds={i === 0 ? 0 : 0.05}>
+            <article className="max-w-2xl">
+              <p className="font-mono text-xs uppercase tracking-widest text-accent">
+                {block.kicker}
+              </p>
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+                {block.title}
+              </h2>
+              <p className="mt-4 text-lg leading-relaxed text-muted">
+                {block.body}
+              </p>
+            </article>
+          </Reveal>
         ))}
-      </div>
-    </section>
+      </Section>
+    </>
   );
 }
