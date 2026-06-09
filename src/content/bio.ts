@@ -20,6 +20,10 @@ export interface Bio {
   summary: string;
   email: string;
   location: string;
+  /** Portrait image path under /public/images (About section). */
+  portrait: string;
+  /** Skills / tools, shown in About and folded into the AI system prompt. */
+  skills: string[];
   /** Path or URL to the resume (surfaced by the chat's showResume tool). */
   resumeUrl: string;
   socials: SocialLink[];
@@ -35,6 +39,17 @@ export const bio: Bio = {
     "PLACEHOLDER bio. A few sentences on who Arif is, what he builds, and what he cares about. This text is shown in the About section and folded into the AI guide's system prompt, so keep it grounded and specific.",
   email: "hello@example.com",
   location: "Earth",
+  portrait: "/images/portrait.jpg",
+  skills: [
+    "TypeScript",
+    "React",
+    "Next.js",
+    "Three.js / R3F",
+    "GSAP",
+    "Node.js",
+    "AI / LLMs",
+    "Design systems",
+  ],
   resumeUrl: "/resume.pdf",
   socials: [
     { label: "GitHub", href: "https://github.com/" },
