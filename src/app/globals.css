@@ -1,0 +1,79 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/*
+ * Class-based dark mode to pair with next-themes (attribute="class").
+ * Without this, Tailwind v4 defaults `dark:` to a media query and ignores
+ * the `.dark` class that next-themes toggles on <html>.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── Design tokens ─────────────────────────────────────────────── */
+:root {
+  --background: oklch(0.99 0.003 95);
+  --foreground: oklch(0.18 0.012 270);
+  --surface: oklch(0.965 0.004 95);
+  --muted: oklch(0.52 0.018 270);
+  --border: oklch(0.9 0.005 270);
+  --accent: oklch(0.58 0.22 285);
+  --accent-foreground: oklch(0.99 0 0);
+}
+
+.dark {
+  --background: oklch(0.16 0.012 280);
+  --foreground: oklch(0.96 0.004 95);
+  --surface: oklch(0.21 0.014 280);
+  --muted: oklch(0.68 0.02 280);
+  --border: oklch(0.29 0.014 280);
+  --accent: oklch(0.72 0.18 290);
+  --accent-foreground: oklch(0.16 0.012 280);
+}
+
+/* Expose tokens to Tailwind utilities (bg-background, text-muted, border-border, …). */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* ── Base ──────────────────────────────────────────────────────── */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 30%, transparent);
+}
+
+/* Smooth in-page anchor jumps unless the user opts out. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/*
+ * Global reduced-motion guard. Individual animations also gate themselves via
+ * gsap.matchMedia() (Phase 1), but this is the safety net for everything else.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
