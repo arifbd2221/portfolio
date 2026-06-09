@@ -2,6 +2,7 @@ import { bio } from "@/content/bio";
 import { Section } from "@/components/section";
 import { Work } from "@/components/sections/work";
 import { About } from "@/components/sections/about";
+import { Story } from "@/components/sections/story";
 import { Contact } from "@/components/sections/contact";
 
 export default function Home() {
@@ -48,6 +49,7 @@ export default function Home() {
 
       <Work />
       <About />
+      <Story />
       <Contact />
     </>
   );
