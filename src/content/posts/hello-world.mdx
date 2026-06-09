@@ -1,0 +1,51 @@
+export const metadata = {
+  title: "Building a portfolio that talks back",
+  date: "2026-05-20",
+  description:
+    "Notes on wiring a single scroll source, a lazy 3D centerpiece, and a Claude-powered guide that can fly the camera.",
+  tags: ["Next.js", "WebGL", "AI"],
+};
+
+This is a PLACEHOLDER post. Swap in real writing — the layout, code
+highlighting, and RSS all work the same once you do.
+
+## One scroll source
+
+Everything on the home page rides a single Lenis instance wired into GSAP's
+ticker. Sections never talk to each other directly; they read from and write to
+one small store:
+
+```ts
+import { create } from "zustand";
+
+export const useAppStore = create((set) => ({
+  scrollProgress: 0,
+  activeSection: "hero",
+  setScrollProgress: (scrollProgress) => set({ scrollProgress }),
+}));
+```
+
+The 3D scene only ever **reads** that store inside `useFrame` — it never owns
+scroll. That separation is what keeps the camera, the reveals, and the pinned
+story from fighting each other.
+
+<Callout>
+  The blog is deliberately the calm zone: restrained typography, no 3D, and at
+  most a subtle fade-in. Readability beats motion here.
+</Callout>
+
+## A picture
+
+![An abstract aurora gradient](/images/blog/aurora.svg)
+
+## Why it matters
+
+- The 3D canvas is lazy, so it never blocks first paint.
+- Every animation has a `prefers-reduced-motion` fallback.
+- The AI guide turns a question like _"show me your Aurora project"_ into a
+  camera move — content stays data-driven the whole way down.
+
+<Callout type="warn">
+  Replace this placeholder copy before shipping. The real posts go in
+  `src/content/posts/`.
+</Callout>

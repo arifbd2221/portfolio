@@ -75,7 +75,15 @@ export default function RootLayout({
               {bio.name.toLowerCase()}
               <span className="text-accent">.</span>
             </Link>
-            <ThemeToggle />
+            <nav className="flex items-center gap-2">
+              <Link
+                href="/blog"
+                className="rounded-full px-3 py-1.5 text-sm text-foreground/80 transition-colors hover:bg-surface hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              >
+                Blog
+              </Link>
+              <ThemeToggle />
+            </nav>
           </header>
 
           <main id="main">{children}</main>
