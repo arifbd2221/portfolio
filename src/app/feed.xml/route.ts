@@ -1,10 +1,9 @@
 import { bio } from "@/content/bio";
 import { posts } from "@/content/posts";
+import { siteUrl as SITE_URL } from "@/lib/site";
 
 // Generated at build time.
 export const dynamic = "force-static";
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 function escapeXml(value: string): string {
   return value

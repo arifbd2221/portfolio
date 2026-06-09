@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { posts, getPostBySlug } from "@/content/posts";
+import { JsonLd } from "@/components/json-ld";
+import { bio } from "@/content/bio";
+import { siteUrl } from "@/lib/site";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -38,8 +41,20 @@ export default async function PostPage({ params }: PageProps) {
 
   const { Component, metadata } = post;
 
+  const articleLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: metadata.title,
+    description: metadata.description,
+    datePublished: metadata.date,
+    keywords: metadata.tags.join(", "),
+    url: `${siteUrl}/blog/${post.slug}`,
+    author: { "@type": "Person", name: bio.name },
+  };
+
   return (
     <article className="mx-auto max-w-2xl px-6 py-24">
+      <JsonLd data={articleLd} />
       <Link
         href="/blog"
         className="text-sm text-muted transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"

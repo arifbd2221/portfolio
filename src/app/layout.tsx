@@ -7,6 +7,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { ChatLauncher } from "@/components/chat/ChatLauncher";
 import { SceneMount } from "@/components/three/SceneMount";
 import { bio } from "@/content/bio";
+import { siteUrl } from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,8 +21,6 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
@@ -34,6 +33,15 @@ export const metadata: Metadata = {
     description: bio.tagline,
     type: "website",
     url: siteUrl,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${bio.name} — Portfolio`,
+    description: bio.tagline,
+  },
+  alternates: {
+    canonical: "/",
+    types: { "application/rss+xml": `${siteUrl}/feed.xml` },
   },
 };
 
@@ -88,7 +96,34 @@ export default function RootLayout({
 
           <main id="main">{children}</main>
 
-          {/* Global chat launcher slot — Claude chat wired in Phase 7. */}
+          <footer className="relative z-0 border-t border-border/60 bg-background/80 px-6 py-10 text-sm text-muted">
+            <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4">
+              <p>
+                © {new Date().getFullYear()} {bio.name}
+              </p>
+              <nav className="flex flex-wrap gap-4" aria-label="Footer">
+                {bio.socials.map((s) => (
+                  <a
+                    key={s.label}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                  >
+                    {s.label}
+                  </a>
+                ))}
+                <a
+                  href="/feed.xml"
+                  className="transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                >
+                  RSS
+                </a>
+              </nav>
+            </div>
+          </footer>
+
+          {/* Global chat launcher — Claude chat that can drive the 3D scene. */}
           <ChatLauncher />
         </Providers>
       </body>

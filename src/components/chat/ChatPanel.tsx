@@ -36,8 +36,29 @@ export function ChatPanel({ open, onClose }: ChatPanelProps) {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLElement>(null);
 
   const busy = status === "submitted" || status === "streaming";
+
+  // Trap Tab focus within the open panel (a11y).
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key !== "Tab" || !open || !panelRef.current) return;
+    const focusable = Array.from(
+      panelRef.current.querySelectorAll<HTMLElement>(
+        'button, [href], input, [tabindex]:not([tabindex="-1"])',
+      ),
+    ).filter((el) => !el.hasAttribute("disabled") && el.offsetParent !== null);
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
 
   // Dispatch tool calls → store / navigation / resume (once per call).
   useEffect(() => {
@@ -107,6 +128,8 @@ export function ChatPanel({ open, onClose }: ChatPanelProps) {
 
   return (
     <motion.section
+      ref={panelRef}
+      onKeyDown={handleKeyDown}
       role="dialog"
       aria-label="Portfolio chat guide"
       aria-hidden={!open}

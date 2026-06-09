@@ -1,4 +1,6 @@
 import { bio } from "@/content/bio";
+import { siteUrl } from "@/lib/site";
+import { JsonLd } from "@/components/json-ld";
 import { Section } from "@/components/section";
 import { Work } from "@/components/sections/work";
 import { About } from "@/components/sections/about";
@@ -6,9 +8,22 @@ import { Story } from "@/components/sections/story";
 import { Gallery } from "@/components/sections/gallery";
 import { Contact } from "@/components/sections/contact";
 
+const personLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: bio.name,
+  jobTitle: bio.role,
+  description: bio.summary,
+  url: siteUrl,
+  email: `mailto:${bio.email}`,
+  knowsAbout: bio.skills,
+  sameAs: bio.socials.map((s) => s.href),
+};
+
 export default function Home() {
   return (
     <>
+      <JsonLd data={personLd} />
       <Section
         id="hero"
         aria-labelledby="hero-heading"
