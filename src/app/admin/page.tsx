@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { posts } from "@/content/posts";
+import { getAllPosts } from "@/content/posts";
 import { projects } from "@/content/projects";
 import { gallery } from "@/content/gallery";
 import { story } from "@/content/story";
 
-export default function AdminOverview() {
+export default async function AdminOverview() {
+  const posts = await getAllPosts();
   const cards = [
     {
       href: "/admin/posts",

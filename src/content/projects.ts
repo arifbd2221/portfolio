@@ -1,76 +1,56 @@
+import { z } from "zod";
+import raw from "./projects.json";
+
 /**
- * Projects content. PLACEHOLDER data.
+ * Projects content — backed by projects.json so the admin can edit it.
  *
  * The `id` field is a STABLE handle — it is the target for the AI chat's
- * focusProject(id) tool (Phase 7) and the 3D scene's focus nodes (Phase 2).
- * Never reuse or churn ids once a project ships.
+ * focusProject(id) tool and the 3D scene's focus nodes. Never reuse or churn
+ * ids once a project ships (the admin enforces id immutability).
  */
+const projectLinkSchema = z.object({
+  label: z.string().min(1),
+  href: z.string().url(),
+});
 
-export interface ProjectLink {
-  label: string;
-  href: string;
-}
-
-export interface Project {
+const projectSchema = z.object({
   /** Stable, lowercase, kebab-case. AI + 3D scene target this. */
-  id: string;
-  title: string;
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  title: z.string().min(1),
   /** URL slug for /work/[slug]. */
-  slug: string;
-  /** One-line summary for cards + the chat. */
-  summary: string;
-  tags: string[];
-  role: string;
-  year: number;
-  links: ProjectLink[];
-  /** Cover image path under /public/images (added in Phase 3). */
-  cover: string;
-  /** Long-form case study body (Markdown-ish string for now). */
-  body: string;
-}
+  slug: z.string().regex(/^[a-z0-9-]+$/),
+  summary: z.string().min(1),
+  tags: z.array(z.string().min(1)),
+  role: z.string().min(1),
+  year: z.number().int().min(1990).max(2100),
+  links: z.array(projectLinkSchema),
+  /** Cover image path under /public. */
+  cover: z.string().startsWith("/"),
+  /** Long-form case study body (paragraphs split on blank lines). */
+  body: z.string(),
+});
 
-// TODO: replace with real projects. Keep ids stable.
-export const projects: Project[] = [
-  {
-    id: "aurora",
-    title: "Aurora",
-    slug: "aurora",
-    summary:
-      "PLACEHOLDER — a real-time generative visual engine. Replace with a real project.",
-    tags: ["WebGL", "Realtime", "TypeScript"],
-    role: "Creator",
-    year: 2025,
-    links: [{ label: "Live", href: "https://example.com" }],
-    cover: "/images/projects/aurora.jpg",
-    body: "PLACEHOLDER case study body. Problem, approach, outcome.",
-  },
-  {
-    id: "lighthouse",
-    title: "Lighthouse",
-    slug: "lighthouse",
-    summary:
-      "PLACEHOLDER — an AI assistant that navigates large codebases. Replace.",
-    tags: ["AI", "DX", "Next.js"],
-    role: "Lead Engineer",
-    year: 2024,
-    links: [{ label: "Case study", href: "https://example.com" }],
-    cover: "/images/projects/lighthouse.jpg",
-    body: "PLACEHOLDER case study body.",
-  },
-  {
-    id: "atlas",
-    title: "Atlas",
-    slug: "atlas",
-    summary:
-      "PLACEHOLDER — a data-viz platform for exploring spatial datasets. Replace.",
-    tags: ["Data Viz", "Maps", "React"],
-    role: "Frontend",
-    year: 2023,
-    links: [{ label: "Repo", href: "https://github.com/" }],
-    cover: "/images/projects/atlas.jpg",
-    body: "PLACEHOLDER case study body.",
-  },
-];
+const projectsSchema = z
+  .array(projectSchema)
+  .superRefine((list, ctx) => {
+    const ids = new Set<string>();
+    const slugs = new Set<string>();
+    for (const p of list) {
+      if (ids.has(p.id)) {
+        ctx.addIssue({ code: "custom", message: `Duplicate project id "${p.id}"` });
+      }
+      if (slugs.has(p.slug)) {
+        ctx.addIssue({ code: "custom", message: `Duplicate project slug "${p.slug}"` });
+      }
+      ids.add(p.id);
+      slugs.add(p.slug);
+    }
+  });
+
+export type ProjectLink = z.infer<typeof projectLinkSchema>;
+export type Project = z.infer<typeof projectSchema>;
+
+export const projects: Project[] = projectsSchema.parse(raw);
 
 /** Lookup by stable id — used by the AI focusProject tool. */
 export function getProjectById(id: string): Project | undefined {

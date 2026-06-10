@@ -1,16 +1,16 @@
 import "server-only";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { ComponentType } from "react";
 import { readingTime } from "@/lib/reading-time";
-
-import HelloPost, { metadata as helloMeta } from "./posts/hello-world.mdx";
 
 export interface PostMeta {
   title: string;
   date: string; // ISO (YYYY-MM-DD)
   description: string;
   tags: string[];
+  /** Drafts are visible only in the admin — never on the public site. */
+  draft?: boolean;
 }
 
 export interface Post {
@@ -22,27 +22,46 @@ export interface Post {
 
 const POSTS_DIR = join(process.cwd(), "src/content/posts");
 
-function rt(slug: string): number {
-  return readingTime(readFileSync(join(POSTS_DIR, `${slug}.mdx`), "utf8"));
+/**
+ * Posts are AUTO-DISCOVERED from src/content/posts/*.mdx — no registry to
+ * maintain; the admin (or you) just adds a file. The relative template-literal
+ * import below is the documented Next/Turbopack context-module pattern (the
+ * `@/` alias form is the historically flaky one — keep this path relative).
+ */
+export function getPostSlugs(): string[] {
+  return readdirSync(POSTS_DIR)
+    .filter((file) => file.endsWith(".mdx"))
+    .map((file) => file.slice(0, -".mdx".length));
 }
 
-/**
- * Post registry. Native MDX, no Contentlayer.
- * To add a post: create src/content/posts/<slug>.mdx exporting `metadata`,
- * then add an entry below. Sorted newest-first.
- */
-export const posts: Post[] = [
-  {
-    slug: "hello-world",
-    metadata: helloMeta,
-    Component: HelloPost,
-    readingTimeMinutes: rt("hello-world"),
-  },
-].sort(
-  (a, b) =>
-    new Date(b.metadata.date).getTime() - new Date(a.metadata.date).getTime(),
-);
+async function loadPost(slug: string): Promise<Post> {
+  const mod = await import(`./posts/${slug}.mdx`);
+  return {
+    slug,
+    metadata: mod.metadata,
+    Component: mod.default,
+    readingTimeMinutes: readingTime(
+      readFileSync(join(POSTS_DIR, `${slug}.mdx`), "utf8"),
+    ),
+  };
+}
 
-export function getPostBySlug(slug: string): Post | undefined {
-  return posts.find((post) => post.slug === slug);
+/** Every post, drafts included — admin use. Sorted newest-first. */
+export async function getAllPosts(): Promise<Post[]> {
+  const posts = await Promise.all(getPostSlugs().map(loadPost));
+  return posts.sort(
+    (a, b) =>
+      new Date(b.metadata.date).getTime() - new Date(a.metadata.date).getTime(),
+  );
+}
+
+/** Public surfaces (index, RSS, sitemap, chat prompt) — drafts excluded. */
+export async function getPublishedPosts(): Promise<Post[]> {
+  return (await getAllPosts()).filter((post) => !post.metadata.draft);
+}
+
+/** Slug is validated against the directory listing — never an open path. */
+export async function getPostBySlug(slug: string): Promise<Post | undefined> {
+  if (!getPostSlugs().includes(slug)) return undefined;
+  return loadPost(slug);
 }

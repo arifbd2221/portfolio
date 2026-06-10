@@ -1,0 +1,53 @@
+[
+  {
+    "id": "photo-1",
+    "src": "/images/gallery/photo-1.jpg",
+    "alt": "PLACEHOLDER — describe the photo.",
+    "caption": "PLACEHOLDER caption",
+    "width": 1200,
+    "height": 800,
+    "blurDataURL": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAHCAIAAAC+zks0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAA5ElEQVR4nAHZACb/ALfb6Lbe7Ljg7b/j7bfj767k9rft/M7x+dft76W7vwDx/fzz/v3z///p+frY5+ivw8WTnZpocW46REITGxkAqLa2q7m6lZ6bZ2lhTUxGIyonBA4MBQsHCQwJDxIQABc9QiRKUAs5PgM0OUY6MTosJRYwMRUzNRU0NRMsLgDH3d7K4OHJ5eaQytFGLipIJyQedocSepENfJYQcIYA1OXizezrvdfZW2RoGxcYFg8PN2FsesfXYbzPMJy1AFzK3kynuxUwOAcWGhEeHxQpLhAcIUVtenLI2VK70c9HZgsTsBtDAAAAAElFTkSuQmCC"
+  },
+  {
+    "id": "photo-2",
+    "src": "/images/gallery/photo-2.jpg",
+    "alt": "PLACEHOLDER — describe the photo.",
+    "width": 800,
+    "height": 1100,
+    "blurDataURL": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAKCAIAAAD3rtNaAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA40lEQVR4nAXBbU+CQAAA4Pu7rU+2vuRoQ3OulaKYJKgwLuS4OwGPO8DkRjRlK9Z6mVtb60t/pecBPNs/ytfn/Wf9cmzef96+fo/ff8CHq5BG9gJiHOZZUVV103wA4uiBPR52L/pKa9BtI3vKiQug3nMnV8QZR97swRqO+pft1gmYax1T6xgDVTk/7Sln+rVi3KrAGqnu7IZCA1qaoE6Z4iJBgOOFFKja0lpuDrv4KacHmYAd8wq2kokvuV+KoEwDyX3AiZmu51m4zCNnG7sF8wReghhNNsEdw1NGDLE2GbrnxPoHnguHxOR/cOIAAAAASUVORK5CYII="
+  },
+  {
+    "id": "photo-3",
+    "src": "/images/gallery/photo-3.jpg",
+    "alt": "PLACEHOLDER — describe the photo.",
+    "caption": "PLACEHOLDER caption",
+    "width": 1200,
+    "height": 800,
+    "blurDataURL": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAHCAIAAAC+zks0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAA30lEQVR4nAXBbUvCQAAA4Ps/yuXcnfPet3PLy401p91YhkYiCWWNEFb0xQSJXj4VVAR973O/sOcBXQIJg2EPpTmdzP2j0gyL4ffv3+b5U2sGuqxJBQx0e1SK2XlkJ0FmD16+fq7qu56WQBq4n7WSEmWWnC6j4kSlY3O7e12sKl9R4LoNwltR4uXHIj5kvsb9xFzW2+niQgkOOHWTOPQVUQHiCmEMGRfj6SocFK7jgLfHh4/3an0zktLDHWev2eh43M6qOJ97mIDt9XJXr61RRTo4K/Onzb0J+4xKKQLcRv/XCUE6QRREcAAAAABJRU5ErkJggg=="
+  },
+  {
+    "id": "photo-4",
+    "src": "/images/gallery/photo-4.jpg",
+    "alt": "PLACEHOLDER — describe the photo.",
+    "width": 900,
+    "height": 1200,
+    "blurDataURL": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAKCAIAAAD3rtNaAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA50lEQVR4nAHcACP/AKaso73Dsb2/rMLFrMjOtsDGtK2xpQCxt6m8v7C+vrC7uqzDxLHDxrS3u6wAusCwxcq6w8O5vru0xMS2xsm3wMOzAL7DtMrPv8rKvcO/tsbFucnLvMTHtwDGzLvO08PO0MO7tLHR0sXQ08TLz74Az9XD2+HPyMnCrKaqysnBy8vBy8/AAJyZmrm7tMDBu5GKlZiSl6Shn62qpQBnYWp3dH6MiJJvZXmGgYeNioSknpQAVEZXYldsV0loXE9scmd+ZVVnfG9uAGqCW3mTZ32RcHF6bYubgHV8bneDbw5CiGAPUUGuAAAAAElFTkSuQmCC"
+  },
+  {
+    "id": "photo-5",
+    "src": "/images/gallery/photo-5.jpg",
+    "alt": "PLACEHOLDER — describe the photo.",
+    "width": 1200,
+    "height": 800,
+    "blurDataURL": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAHCAIAAAC+zks0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAA5ElEQVR4nAHZACb/AN7j6Ojq7+nr7+Dm79rf6eTn7uHl7OTo7e/x8tvm7AC1sKrR1djK1eG8xtPJ0+C3xdVufpeMk6C4v8mIk6MAkYhsoJSFhYqRVF1uWWFxNkVdHyxFJC1DJC1DHyk9AImAWot+W2lgSlRPQzM3PkJCQWJaSWZiUGBdTGBfSwBEQCE7OyA8Oy05OTU9QEU6PUA1NTE7Oi9MSCxMTzAAJiUiKCouKC0zLDE2P0JHNjo/Ki80KS0zIyUqIiMiACUpLSksLysvMjAzODg7PzU4PzAzNysvMSwxNCUoLDyrVxuFgMTEAAAAAElFTkSuQmCC"
+  },
+  {
+    "id": "photo-6",
+    "src": "/images/gallery/photo-6.jpg",
+    "alt": "PLACEHOLDER — describe the photo.",
+    "caption": "PLACEHOLDER caption",
+    "width": 1100,
+    "height": 1100,
+    "blurDataURL": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAACXBIWXMAAAsTAAALEwEAmpwYAAABQUlEQVR4nAE2Acn+ANXU2d3c4dva39XU2c/R1cvN0MnIzcrJztDP09HQ1QDZ2N3d3OHc2t/W2NvLz9LDxcy+wMnExMrOzNHU0tcA2djd2tne2Nfc0NPWwsbMtLfBs7a/vcDIzs/T3NzgANfW3Nvb4NbV283O0sLEy8THzszP1cnN0b/AxJuangCMhYW0r7HIxMfIxsi/vsKrqqyVkZKSi4qKf3x/c24AgG5hf25leG1pgHp5goKHfnx/bWdndG1rc2degW9lAFtVVFlWWG1tcmxtcnt9g3l7f3BwdW9vdGZiZl5VVABfX2VoZ21jYmdnZmttbXJmZmplZGhdXGFhYWZmZmwAUlBVUE5TUVBVXFxhWFdcU1FWWFdcVFNYTEtQTkxRADk4PDw8QEhHTE5NUkVESUNCR0dGS0lITUNCRzo5PW60q4Hl8dxDAAAAAElFTkSuQmCC"
+  }
+]

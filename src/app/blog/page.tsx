@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { posts } from "@/content/posts";
+import { getPublishedPosts } from "@/content/posts";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -13,7 +13,8 @@ const dateFormat = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
 });
 
-export default function BlogIndex() {
+export default async function BlogIndex() {
+  const posts = await getPublishedPosts();
   return (
     <div className="mx-auto max-w-2xl px-6 py-24">
       <header>

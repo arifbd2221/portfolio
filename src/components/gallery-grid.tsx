@@ -16,11 +16,11 @@ export function GalleryGrid() {
   const [index, setIndex] = useState(-1);
 
   const slides = gallery.map((g) => ({
-    src: g.image.src,
+    src: g.src,
     alt: g.alt,
     title: g.caption,
-    width: g.image.width,
-    height: g.image.height,
+    width: g.width,
+    height: g.height,
   }));
 
   return (
@@ -39,9 +39,12 @@ export function GalleryGrid() {
             className="block w-full break-inside-avoid overflow-hidden rounded-xl border border-border focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             <Image
-              src={g.image}
+              src={g.src}
               alt={g.alt}
+              width={g.width}
+              height={g.height}
               placeholder="blur"
+              blurDataURL={g.blurDataURL}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="h-auto w-full transition-transform duration-500 hover:scale-[1.03]"
             />

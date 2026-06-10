@@ -1,59 +1,30 @@
+import { z } from "zod";
+import raw from "./bio.json";
+
 /**
- * Bio / identity content. PLACEHOLDER — swap in real details.
- * Used by the layout metadata, the About section (Phase 3), and assembled into
- * the AI chat's system prompt (Phase 7).
+ * Bio / identity content — backed by bio.json so the admin can edit it.
+ * zod gives runtime validation (bad commits fail the build, not the page)
+ * and the inferred types keep the public API identical to the old TS file.
  */
+const socialLinkSchema = z.object({
+  label: z.string().min(1),
+  href: z.string().url(),
+});
 
-export interface SocialLink {
-  /** Display label, e.g. "GitHub". */
-  label: string;
-  href: string;
-}
+const bioSchema = z.object({
+  name: z.string().min(1),
+  role: z.string().min(1),
+  tagline: z.string().min(1),
+  summary: z.string().min(1),
+  email: z.string().email(),
+  location: z.string().min(1),
+  portrait: z.string().startsWith("/"),
+  skills: z.array(z.string().min(1)),
+  resumeUrl: z.string().startsWith("/"),
+  socials: z.array(socialLinkSchema),
+});
 
-export interface Bio {
-  name: string;
-  /** Short role line, e.g. "Software Engineer · AI & Interactive". */
-  role: string;
-  /** One-line hook for the hero. */
-  tagline: string;
-  /** A paragraph for About + the AI system prompt. */
-  summary: string;
-  email: string;
-  location: string;
-  /** Portrait image path under /public/images (About section). */
-  portrait: string;
-  /** Skills / tools, shown in About and folded into the AI system prompt. */
-  skills: string[];
-  /** Path or URL to the resume (surfaced by the chat's showResume tool). */
-  resumeUrl: string;
-  socials: SocialLink[];
-}
+export type SocialLink = z.infer<typeof socialLinkSchema>;
+export type Bio = z.infer<typeof bioSchema>;
 
-// TODO: replace placeholder copy with real content.
-export const bio: Bio = {
-  name: "Arif",
-  role: "Software Engineer · AI & Interactive",
-  tagline:
-    "I build fast, distinctive web experiences — and the AI that makes them feel alive.",
-  summary:
-    "PLACEHOLDER bio. A few sentences on who Arif is, what he builds, and what he cares about. This text is shown in the About section and folded into the AI guide's system prompt, so keep it grounded and specific.",
-  email: "hello@example.com",
-  location: "Earth",
-  portrait: "/images/portrait.jpg",
-  skills: [
-    "TypeScript",
-    "React",
-    "Next.js",
-    "Three.js / R3F",
-    "GSAP",
-    "Node.js",
-    "AI / LLMs",
-    "Design systems",
-  ],
-  resumeUrl: "/resume.pdf",
-  socials: [
-    { label: "GitHub", href: "https://github.com/" },
-    { label: "LinkedIn", href: "https://www.linkedin.com/" },
-    { label: "X", href: "https://x.com/" },
-  ],
-};
+export const bio: Bio = bioSchema.parse(raw);

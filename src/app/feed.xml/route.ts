@@ -1,5 +1,5 @@
 import { bio } from "@/content/bio";
-import { posts } from "@/content/posts";
+import { getPublishedPosts } from "@/content/posts";
 import { siteUrl as SITE_URL } from "@/lib/site";
 
 // Generated at build time.
@@ -14,7 +14,8 @@ function escapeXml(value: string): string {
     .replace(/'/g, "&apos;");
 }
 
-export function GET() {
+export async function GET() {
+  const posts = await getPublishedPosts();
   const items = posts
     .map((post) => {
       const url = `${SITE_URL}/blog/${post.slug}`;

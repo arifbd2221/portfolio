@@ -9,21 +9,23 @@ import {
 import { z } from "zod";
 import { bio } from "@/content/bio";
 import { projects, getProjectById } from "@/content/projects";
-import { posts } from "@/content/posts";
+import { getPublishedPosts } from "@/content/posts";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 export const maxDuration = 30;
 
 const SECTIONS = ["hero", "work", "about", "story", "gallery", "contact"] as const;
 
-function buildSystemPrompt(): string {
+async function buildSystemPrompt(): Promise<string> {
   const projectLines = projects
     .map(
       (p) =>
         `- ${p.title} (id: "${p.id}", ${p.year}, ${p.role}): ${p.summary} Tags: ${p.tags.join(", ")}.`,
     )
     .join("\n");
-  const postTitles = posts.map((p) => p.metadata.title).join("; ");
+  const postTitles = (await getPublishedPosts())
+    .map((p) => p.metadata.title)
+    .join("; ");
 
   return `You are the friendly, concise guide for ${bio.name}'s portfolio (${bio.role}).
 
@@ -78,7 +80,7 @@ export async function POST(req: Request) {
 
   const result = streamText({
     model: google(process.env.AI_MODEL ?? "gemini-2.5-flash"),
-    system: buildSystemPrompt(),
+    system: await buildSystemPrompt(),
     messages: modelMessages,
     maxOutputTokens: 1024,
     stopWhen: stepCountIs(4),

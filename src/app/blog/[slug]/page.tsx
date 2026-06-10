@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { posts, getPostBySlug } from "@/content/posts";
+import { getPublishedPosts, getPostBySlug } from "@/content/posts";
 import { JsonLd } from "@/components/json-ld";
 import { bio } from "@/content/bio";
 import { siteUrl } from "@/lib/site";
@@ -10,7 +10,8 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const posts = await getPublishedPosts();
   return posts.map((post) => ({ slug: post.slug }));
 }
 
@@ -18,8 +19,8 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
-  if (!post) return {};
+  const post = await getPostBySlug(slug);
+  if (!post || post.metadata.draft) return {};
   const { title, description } = post.metadata;
   return {
     title,
@@ -36,8 +37,9 @@ const dateFormat = new Intl.DateTimeFormat("en-US", {
 
 export default async function PostPage({ params }: PageProps) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
-  if (!post) notFound();
+  const post = await getPostBySlug(slug);
+  // Drafts are admin-only — the public route treats them as missing.
+  if (!post || post.metadata.draft) notFound();
 
   const { Component, metadata } = post;
 

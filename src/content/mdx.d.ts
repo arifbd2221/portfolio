@@ -8,6 +8,7 @@ declare module "*.mdx" {
     date: string;
     description: string;
     tags: string[];
+    draft?: boolean;
   };
 
   const MDXComponent: ComponentType;

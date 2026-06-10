@@ -1,0 +1,25 @@
+{
+  "beats": [
+    {
+      "id": "beat-1",
+      "image": "/images/story/beat-1.jpg",
+      "kicker": "PLACEHOLDER · 2015",
+      "heading": "Where it started",
+      "body": "PLACEHOLDER beat copy. One or two sentences that advance the story as the reader scrolls."
+    },
+    {
+      "id": "beat-2",
+      "image": "/images/story/beat-2.jpg",
+      "kicker": "PLACEHOLDER · 2019",
+      "heading": "The turning point",
+      "body": "PLACEHOLDER beat copy."
+    },
+    {
+      "id": "beat-3",
+      "image": "/images/story/beat-3.jpg",
+      "kicker": "PLACEHOLDER · Today",
+      "heading": "Now",
+      "body": "PLACEHOLDER beat copy."
+    }
+  ]
+}

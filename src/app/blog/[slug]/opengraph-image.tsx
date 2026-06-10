@@ -13,7 +13,7 @@ export default async function Image({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
   return new ImageResponse(
     <OgCard
       eyebrow="Writing"
