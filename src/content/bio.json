@@ -1,25 +1,25 @@
 {
-  "name": "Arif",
-  "role": "Software Engineer · AI & Interactive",
-  "tagline": "I build fast, distinctive web experiences — and the AI that makes them feel alive.",
-  "summary": "PLACEHOLDER bio. A few sentences on who Arif is, what he builds, and what he cares about. This text is shown in the About section and folded into the AI guide's system prompt, so keep it grounded and specific.",
-  "email": "hello@example.com",
-  "location": "Earth",
+  "name": "Mohidul Hoque Arif",
+  "role": "Senior Software Engineer · SDS Manager",
+  "tagline": "I build robust backends, APIs, and developer tools — six years and counting.",
+  "summary": "I'm a software engineer with 6+ years of experience, currently a Senior Software Engineer at SDS Manager. I work across Python/Django, Go, and JavaScript — building token-secured REST and GraphQL APIs, automation, and developer tooling that makes teams faster.",
+  "email": "mohidul@sdsmanager.com",
+  "location": "Bangladesh",
   "portrait": "/images/portrait.jpg",
   "skills": [
-    "TypeScript",
+    "Python",
+    "Django",
+    "Django REST Framework",
+    "GraphQL",
+    "Go",
+    "JavaScript",
     "React",
-    "Next.js",
-    "Three.js / R3F",
-    "GSAP",
-    "Node.js",
-    "AI / LLMs",
-    "Design systems"
+    "Java",
+    "REST API design",
+    "Automation & CLI tooling"
   ],
   "resumeUrl": "/resume.pdf",
   "socials": [
-    { "label": "GitHub", "href": "https://github.com/" },
-    { "label": "LinkedIn", "href": "https://www.linkedin.com/" },
-    { "label": "X", "href": "https://x.com/" }
+    { "label": "GitHub", "href": "https://github.com/arifbd2221" }
   ]
 }
