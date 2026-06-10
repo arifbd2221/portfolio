@@ -1,4 +1,4 @@
-import { anthropic } from "@ai-sdk/anthropic";
+import { google } from "@ai-sdk/google";
 import {
   streamText,
   tool,
@@ -60,9 +60,9 @@ export async function POST(req: Request) {
     );
   }
 
-  if (!process.env.ANTHROPIC_API_KEY) {
+  if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
     return Response.json(
-      { error: "The chat isn't configured — ANTHROPIC_API_KEY is missing." },
+      { error: "The chat isn't configured — GOOGLE_GENERATIVE_AI_API_KEY is missing." },
       { status: 503 },
     );
   }
@@ -77,11 +77,26 @@ export async function POST(req: Request) {
   const modelMessages = await convertToModelMessages(messages);
 
   const result = streamText({
-    model: anthropic(process.env.AI_MODEL ?? "claude-sonnet-4-6"),
+    model: google(process.env.AI_MODEL ?? "gemini-2.5-flash"),
     system: buildSystemPrompt(),
     messages: modelMessages,
     maxOutputTokens: 1024,
     stopWhen: stepCountIs(4),
+    providerOptions: {
+      google: {
+        // Concise guide — disable extended thinking for low latency, and so
+        // maxOutputTokens applies to real output (2.5 thinking tokens would
+        // otherwise count against the budget and can truncate the answer).
+        thinkingConfig: { thinkingBudget: 0 },
+        // Public-facing chat — keep moderate safety on.
+        safetySettings: [
+          { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+          { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+          { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+          { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+        ],
+      },
+    },
     tools: {
       focusProject: tool({
         description:
@@ -105,7 +120,14 @@ export async function POST(req: Request) {
       }),
       showResume: tool({
         description: "Surface the resume / CV to the user.",
-        inputSchema: z.object({}),
+        // Optional, ignored field: Gemini rejects function declarations whose
+        // parameters object is empty, so we never send an empty schema.
+        inputSchema: z.object({
+          note: z
+            .string()
+            .optional()
+            .describe("Unused — present only for provider compatibility."),
+        }),
         execute: async () => ({ url: bio.resumeUrl }),
       }),
       navigateTo: tool({

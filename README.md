@@ -1,7 +1,7 @@
 # Portfolio
 
 A personal portfolio site: AI-forward, animation-heavy, with a 3D centerpiece
-and a Claude-powered chat that can navigate the 3D scene. Premium, distinctive,
+and a Gemini-powered chat that can navigate the 3D scene. Premium, distinctive,
 fast.
 
 Built phase-by-phase per [`portfolio-build-phases.md`](./portfolio-build-phases.md).
@@ -10,7 +10,7 @@ Built phase-by-phase per [`portfolio-build-phases.md`](./portfolio-build-phases.
 
 Next.js 16 (App Router) · TypeScript (strict) · Tailwind CSS v4 (CSS-first) ·
 `motion` · `gsap` (+ ScrollTrigger) · `lenis` · `three` + `@react-three/fiber` +
-`@react-three/drei` · `zustand` · Vercel AI SDK v6 (`ai` + `@ai-sdk/anthropic` +
+`@react-three/drei` · `zustand` · Vercel AI SDK v6 (`ai` + `@ai-sdk/google` +
 `@ai-sdk/react`) · `@next/mdx` + `rehype-pretty-code` + `shiki` ·
 `yet-another-react-lightbox` · `next-themes`. Deploy target: Vercel.
 
@@ -18,12 +18,12 @@ Next.js 16 (App Router) · TypeScript (strict) · Tailwind CSS v4 (CSS-first) ·
 
 ```bash
 pnpm install
-cp .env.example .env.local   # add ANTHROPIC_API_KEY to use the chat
+cp .env.example .env.local   # add GOOGLE_GENERATIVE_AI_API_KEY to use the chat
 pnpm dev                     # http://localhost:3000
 ```
 
 The site runs fully without an API key — only the AI chat needs
-`ANTHROPIC_API_KEY` (it returns a friendly 503 until set).
+`GOOGLE_GENERATIVE_AI_API_KEY` (it returns a friendly 503 until set).
 
 ## Scripts
 
@@ -40,8 +40,8 @@ The site runs fully without an API key — only the AI chat needs
 
 | Variable                   | Required | Purpose                                                                 |
 | -------------------------- | -------- | ----------------------------------------------------------------------- |
-| `ANTHROPIC_API_KEY`        | for chat | Anthropic API key (read server-side only).                              |
-| `AI_MODEL`                 | optional | Chat model id. Defaults to `claude-sonnet-4-6`.                         |
+| `GOOGLE_GENERATIVE_AI_API_KEY` | for chat | Google Gemini API key (read server-side only).                     |
+| `AI_MODEL`                 | optional | Chat model id. Defaults to `gemini-2.5-flash`.                          |
 | `NEXT_PUBLIC_SITE_URL`     | optional | Absolute base URL for metadata/OG/sitemap. Defaults to localhost.       |
 | `UPSTASH_REDIS_REST_URL`   | optional | Distributed chat rate limiting. Falls back to in-memory when absent.    |
 | `UPSTASH_REDIS_REST_TOKEN` | optional | Pairs with the Upstash URL above.                                       |
@@ -94,7 +94,7 @@ scripts/           gen-gallery-placeholders.mjs
 
 ## AI chat → scene commands
 
-`src/app/api/chat/route.ts` streams Claude and exposes three tools; the client
+`src/app/api/chat/route.ts` streams Gemini and exposes three tools; the client
 (`src/components/chat/ChatPanel.tsx`) intercepts the tool-call parts and dispatches:
 
 | Tool                    | Effect                                                            |
@@ -118,7 +118,7 @@ reduced-motion story/3D fallback.
 ## Deploy to Vercel
 
 1. Push to GitHub and import the repo in Vercel (framework auto-detected).
-2. Set `ANTHROPIC_API_KEY` (and optionally `AI_MODEL`, `NEXT_PUBLIC_SITE_URL`,
+2. Set `GOOGLE_GENERATIVE_AI_API_KEY` (and optionally `AI_MODEL`, `NEXT_PUBLIC_SITE_URL`,
    and the Upstash vars) in Project → Settings → Environment Variables.
 3. Deploy. Set `NEXT_PUBLIC_SITE_URL` to the production domain for correct
    absolute metadata/OG/sitemap URLs.
