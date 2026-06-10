@@ -16,6 +16,8 @@ import {
   GitHubConfigError,
 } from "@/lib/github";
 
+import { MEDIA_FOLDERS, MAX_UPLOAD_BYTES } from "./media-shared";
+
 /**
  * Media library IO. Images live under public/images/<folder>/ and are
  * committed like all other content (GitHub mode) or written to the working
@@ -23,17 +25,8 @@ import {
  * injection vector for user-visible uploads).
  */
 
-export const MEDIA_FOLDERS = [
-  "gallery",
-  "projects",
-  "story",
-  "blog",
-  "misc",
-] as const;
-
 const RASTER_EXT = /\.(jpe?g|png|webp)$/i;
 const LISTABLE_EXT = /\.(jpe?g|png|webp|svg)$/i;
-export const MAX_UPLOAD_BYTES = 4 * 1024 * 1024;
 
 export const uploadSchema = z.object({
   folder: z.enum(MEDIA_FOLDERS),

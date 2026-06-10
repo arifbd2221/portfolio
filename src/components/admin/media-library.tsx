@@ -7,7 +7,7 @@ import {
   deleteMediaAction,
 } from "@/app/admin/actions";
 import { processImageFile } from "@/lib/admin/image-client";
-import { MEDIA_FOLDERS } from "@/lib/admin/media";
+import { MEDIA_FOLDERS } from "@/lib/admin/media-shared";
 import {
   GhostButton,
   StatusLine,
