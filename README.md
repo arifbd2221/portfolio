@@ -45,6 +45,16 @@ The site runs fully without an API key — only the AI chat needs
 | `NEXT_PUBLIC_SITE_URL`     | optional | Absolute base URL for metadata/OG/sitemap. Defaults to localhost.       |
 | `UPSTASH_REDIS_REST_URL`   | optional | Distributed chat rate limiting. Falls back to in-memory when absent.    |
 | `UPSTASH_REDIS_REST_TOKEN` | optional | Pairs with the Upstash URL above.                                       |
+| `AUTH_SECRET`              | admin    | Auth.js session secret (`npx auth secret`).                             |
+| `AUTH_GITHUB_ID` / `AUTH_GITHUB_SECRET` | admin | GitHub OAuth app for `/admin` sign-in.                       |
+| `ADMIN_GITHUB_LOGIN`       | admin    | The one GitHub username allowed into `/admin`.                          |
+
+## Admin panel
+
+A git-backed admin lives at `/admin` (plan: [`admin-build-phases.md`](./admin-build-phases.md)).
+Sign-in is GitHub OAuth restricted to `ADMIN_GITHUB_LOGIN`; saves become commits
+to this repo and Vercel redeploys. Phase A0 (auth + shell) is in place; the blog
+editor lands in Phase A2.
 
 ## Architecture
 
