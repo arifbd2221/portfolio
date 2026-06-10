@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { useChat } from "@ai-sdk/react";
 import { motion } from "motion/react";
 import { useAppStore } from "@/lib/store";
@@ -32,13 +33,40 @@ export function ChatPanel({ open, onClose }: ChatPanelProps) {
 
   const setSceneCommand = useAppStore((s) => s.setSceneCommand);
   const scrollTo = useScrollTo();
+  const pathname = usePathname();
+  const router = useRouter();
   const handledToolCalls = useRef<Set<string>>(new Set());
+  const pendingSectionRef = useRef<string | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLElement>(null);
 
   const busy = status === "submitted" || status === "streaming";
+
+  // Sections only exist on the home page. From any other route, navigate home
+  // first and remember the target; the effect below scrolls once we arrive.
+  // (window.location avoids a stale pathname closure at dispatch time.)
+  const goToSection = useCallback(
+    (section: string) => {
+      if (window.location.pathname === "/") {
+        scrollTo(`#${section}`);
+      } else {
+        pendingSectionRef.current = section;
+        router.push("/");
+      }
+    },
+    [router, scrollTo],
+  );
+
+  useEffect(() => {
+    const section = pendingSectionRef.current;
+    if (pathname !== "/" || !section) return;
+    pendingSectionRef.current = null;
+    // One frame so the home sections have mounted and measured.
+    const id = requestAnimationFrame(() => scrollTo(`#${section}`));
+    return () => cancelAnimationFrame(id);
+  }, [pathname, scrollTo]);
 
   // Trap Tab focus within the open panel (a11y).
   function handleKeyDown(e: React.KeyboardEvent) {
@@ -82,15 +110,15 @@ export function ChatPanel({ open, onClose }: ChatPanelProps) {
 
         if (name === "focusProject" && typeof args.id === "string") {
           setSceneCommand({ type: "focusProject", id: args.id });
-          scrollTo("#work");
+          goToSection("work");
         } else if (name === "navigateTo" && typeof args.section === "string") {
-          scrollTo(`#${args.section}`);
+          goToSection(args.section);
         } else if (name === "showResume") {
           window.open(bio.resumeUrl, "_blank", "noopener,noreferrer");
         }
       }
     }
-  }, [messages, setSceneCommand, scrollTo]);
+  }, [messages, setSceneCommand, goToSection]);
 
   // Focus the input when opened.
   useEffect(() => {
