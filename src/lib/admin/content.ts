@@ -2,7 +2,7 @@ import "server-only";
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { z } from "zod";
-import { getFile, putFile } from "@/lib/github";
+import { getFile, putFile, commitUrl } from "@/lib/github";
 import { bioSchema } from "@/content/bio";
 import { projectsSchema } from "@/content/projects";
 import { storySchema } from "@/content/story";
@@ -55,19 +55,19 @@ export async function saveContent<N extends ContentName>(
   name: N,
   data: unknown,
   sha: string | null,
-): Promise<{ mode: "github" | "local" }> {
+): Promise<{ mode: "github" | "local"; commitUrl?: string }> {
   const { path, schema } = CONTENT_FILES[name];
   const parsed = schema.parse(data);
   const serialized = `${JSON.stringify(parsed, null, 2)}\n`;
 
   if (isGitHubMode()) {
-    await putFile({
+    const { commitSha } = await putFile({
       path,
       content: serialized,
       message: `content(${name}): update via admin`,
       sha: sha ?? undefined,
     });
-    return { mode: "github" };
+    return { mode: "github", commitUrl: commitUrl(commitSha) };
   }
 
   writeFileSync(join(process.cwd(), path), serialized);

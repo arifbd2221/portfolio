@@ -61,7 +61,7 @@ export function BioEditor({
       });
       setMessage(
         result.ok
-          ? savedMessage(result.mode)
+          ? savedMessage(result.mode, result.commitUrl)
           : { kind: "error", text: result.error ?? "Resume upload failed." },
       );
     });

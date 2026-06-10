@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { auth } from "@/auth";
+import { requireAdminWrite } from "@/lib/admin/guard";
 import {
   postMetaSchema,
   slugSchema,
@@ -18,12 +18,7 @@ export interface ActionResult {
   error?: string;
   /** "github" = committed (deploy pending); "local" = written to disk (dev). */
   mode?: "github" | "local";
-}
-
-async function requireAdmin(): Promise<true> {
-  const session = await auth();
-  if (!session?.user) throw new Error("Unauthorized");
-  return true;
+  commitUrl?: string;
 }
 
 function errorMessage(err: unknown): string {
@@ -41,7 +36,7 @@ export async function savePostAction(input: {
   isNew: boolean;
 }): Promise<ActionResult> {
   try {
-    await requireAdmin();
+    await requireAdminWrite();
     const slug = slugSchema.parse(input.slug);
     const meta = postMetaSchema.parse(input.meta);
 
@@ -49,7 +44,7 @@ export async function savePostAction(input: {
       return { ok: false, error: `A post with slug "${slug}" already exists.` };
     }
 
-    const { mode } = await saveAdminPost({
+    const result = await saveAdminPost({
       slug,
       source: serializePost(meta, input.body),
       sha: input.sha,
@@ -57,11 +52,11 @@ export async function savePostAction(input: {
     });
 
     revalidatePath("/admin/posts");
-    if (mode === "local") {
+    if (result.mode === "local") {
       revalidatePath("/blog");
       revalidatePath(`/blog/${slug}`);
     }
-    return { ok: true, mode };
+    return { ok: true, mode: result.mode, commitUrl: result.commitUrl };
   } catch (err) {
     return { ok: false, error: errorMessage(err) };
   }
@@ -72,7 +67,7 @@ export async function deletePostAction(input: {
   sha: string | null;
 }): Promise<ActionResult> {
   try {
-    await requireAdmin();
+    await requireAdminWrite();
     const { mode } = await deleteAdminPost({
       slug: slugSchema.parse(input.slug),
       sha: input.sha,

@@ -6,6 +6,7 @@ import {
   getFile,
   putFile,
   deleteFile,
+  commitUrl,
   GitHubConfigError,
 } from "@/lib/github";
 
@@ -139,20 +140,20 @@ export async function saveAdminPost(opts: {
   source: string;
   sha: string | null;
   isNew: boolean;
-}): Promise<{ mode: "github" | "local" }> {
+}): Promise<{ mode: "github" | "local"; commitUrl?: string }> {
   slugSchema.parse(opts.slug);
   if (!parseMetadata(opts.source)) {
     throw new Error("Post metadata is missing or invalid.");
   }
 
   if (isGitHubMode()) {
-    await putFile({
+    const { commitSha } = await putFile({
       path: `${POSTS_DIR}/${opts.slug}.mdx`,
       content: opts.source,
       message: `content(blog): ${opts.isNew ? "add" : "update"} ${opts.slug}`,
       sha: opts.sha ?? undefined,
     });
-    return { mode: "github" };
+    return { mode: "github", commitUrl: commitUrl(commitSha) };
   }
 
   writeFileSync(join(localDir(), `${opts.slug}.mdx`), opts.source);

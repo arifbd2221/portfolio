@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import type { AdminPostMeta } from "@/lib/admin/posts";
 import { savePostAction, deletePostAction } from "@/app/admin/posts/actions";
+import { StatusLine, savedMessage, type StatusMsg } from "./ui";
 
 // Heavy editor pieces stay out of the first admin paint (and far away from
 // the public site bundles).
@@ -48,7 +49,7 @@ export function PostEditor({
   const [slugTouched, setSlugTouched] = useState(!isNew);
   const [body, setBody] = useState(initialBody);
   const [tab, setTab] = useState<"write" | "preview">("write");
-  const [message, setMessage] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
+  const [message, setMessage] = useState<StatusMsg | null>(null);
   const [pending, startTransition] = useTransition();
 
   const dirty = useMemo(
@@ -71,13 +72,7 @@ export function PostEditor({
         setMessage({ kind: "error", text: result.error ?? "Save failed." });
         return;
       }
-      setMessage({
-        kind: "ok",
-        text:
-          result.mode === "github"
-            ? "Committed — live in a minute or two once Vercel finishes building."
-            : "Saved to the local working tree (dev mode — commit it yourself).",
-      });
+      setMessage(savedMessage(result.mode, result.commitUrl));
       if (isNew) router.push(`/admin/posts/${slug}`);
       else router.refresh();
     });
@@ -205,14 +200,7 @@ export function PostEditor({
         )}
       </div>
 
-      {message && (
-        <p
-          role="status"
-          className={`text-sm ${message.kind === "ok" ? "text-accent" : "text-amber-500"}`}
-        >
-          {message.text}
-        </p>
-      )}
+      <StatusLine message={message} />
 
       <div className="flex items-center gap-3 border-t border-border pt-4">
         <button

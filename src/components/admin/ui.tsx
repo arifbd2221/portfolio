@@ -1,6 +1,7 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { deployStatusAction } from "@/app/admin/actions";
 
 /** Shared admin form primitives — keeps the four editors visually consistent. */
 
@@ -52,6 +53,70 @@ export function MoveButtons({
 export interface StatusMsg {
   kind: "ok" | "error";
   text: string;
+  /** "View commit ↗" link (GitHub mode saves). */
+  link?: string;
+  /** Show the live deploy-status pill (GitHub mode saves). */
+  deploy?: boolean;
+}
+
+const DEPLOY_LABELS: Record<string, string> = {
+  QUEUED: "queued",
+  INITIALIZING: "starting build",
+  BUILDING: "building",
+  READY: "live ✓",
+  ERROR: "build failed",
+  CANCELED: "build canceled",
+};
+
+/**
+ * Polls the latest production deployment after a commit until it settles.
+ * Renders nothing when VERCEL_TOKEN/PROJECT_ID aren't configured.
+ */
+function DeployPill() {
+  const [state, setState] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    let polls = 0;
+    let timer: ReturnType<typeof setTimeout>;
+
+    const tick = async () => {
+      const result = await deployStatusAction();
+      if (cancelled) return;
+      const next = result.ok ? result.data?.state ?? null : null;
+      setState(next ?? null);
+      polls += 1;
+      const settled = next === "READY" || next === "ERROR" || next === "CANCELED";
+      if (next !== null && !settled && polls < 40) timer = setTimeout(tick, 5000);
+    };
+    // First poll waits a beat so the push has reached Vercel.
+    timer = setTimeout(tick, 3000);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, []);
+
+  if (state === null) return null;
+  const settledOk = state === "READY";
+  const failed = state === "ERROR" || state === "CANCELED";
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs ${
+        settledOk
+          ? "border-accent/60 text-accent"
+          : failed
+            ? "border-amber-500/60 text-amber-500"
+            : "border-border text-muted"
+      }`}
+    >
+      {!settledOk && !failed && (
+        <span className="size-1.5 animate-pulse rounded-full bg-current" />
+      )}
+      deploy: {DEPLOY_LABELS[state] ?? state.toLowerCase()}
+    </span>
+  );
 }
 
 export function StatusLine({ message }: { message: StatusMsg | null }) {
@@ -59,21 +124,41 @@ export function StatusLine({ message }: { message: StatusMsg | null }) {
   return (
     <p
       role="status"
-      className={`text-sm ${message.kind === "ok" ? "text-accent" : "text-amber-500"}`}
+      className={`flex flex-wrap items-center gap-2 text-sm ${
+        message.kind === "ok" ? "text-accent" : "text-amber-500"
+      }`}
     >
       {message.text}
+      {message.link && (
+        <a
+          href={message.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline underline-offset-2 hover:opacity-80"
+        >
+          View commit ↗
+        </a>
+      )}
+      {message.deploy && <DeployPill />}
     </p>
   );
 }
 
-export function savedMessage(mode?: "github" | "local"): StatusMsg {
-  return {
-    kind: "ok",
-    text:
-      mode === "github"
-        ? "Committed — live in a minute or two once Vercel finishes building."
-        : "Saved to the local working tree (dev mode — commit it yourself).",
-  };
+export function savedMessage(
+  mode?: "github" | "local",
+  commitUrl?: string,
+): StatusMsg {
+  return mode === "github"
+    ? {
+        kind: "ok",
+        text: "Committed —",
+        link: commitUrl,
+        deploy: true,
+      }
+    : {
+        kind: "ok",
+        text: "Saved to the local working tree (dev mode — commit it yourself).",
+      };
 }
 
 export function PrimaryButton({

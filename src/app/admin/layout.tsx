@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth, signOut } from "@/auth";
+import { AdminNav } from "@/components/admin/admin-nav";
 
 export const metadata: Metadata = {
   title: "Admin",
@@ -20,8 +20,10 @@ const NAV = [
 ] as const;
 
 /**
- * Admin chrome. Defense in depth: proxy.ts already guards /admin, but this
- * layout independently verifies the session server-side on every request.
+ * Admin chrome. This layout is the ENFORCED guard: it verifies the session
+ * server-side on every /admin/* request and redirects out before rendering any
+ * admin content (proxy.ts is only an optimistic outer net). Server actions
+ * re-check auth independently.
  */
 export default async function AdminLayout({
   children,
@@ -40,17 +42,7 @@ export default async function AdminLayout({
           <p className="font-mono text-xs uppercase tracking-widest text-accent">
             Admin
           </p>
-          <nav aria-label="Admin" className="mt-4 flex flex-col gap-1">
-            {NAV.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="rounded-md px-3 py-1.5 text-sm text-foreground/80 transition-colors hover:bg-surface hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+          <AdminNav items={[...NAV]} />
 
           <div className="mt-8 border-t border-border pt-4">
             <p className="truncate text-xs text-muted" title={session.user.name ?? ""}>

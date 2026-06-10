@@ -52,9 +52,26 @@ The site runs fully without an API key — only the AI chat needs
 ## Admin panel
 
 A git-backed admin lives at `/admin` (plan: [`admin-build-phases.md`](./admin-build-phases.md)).
-Sign-in is GitHub OAuth restricted to `ADMIN_GITHUB_LOGIN`; saves become commits
-to this repo and Vercel redeploys. Phase A0 (auth + shell) is in place; the blog
-editor lands in Phase A2.
+Sign-in is GitHub OAuth restricted to `ADMIN_GITHUB_LOGIN`. Every save is a
+commit to this repo (with optimistic-locking conflict detection) and Vercel
+redeploys — each save shows a "View commit" link and a live deploy-status pill
+(when `VERCEL_TOKEN`/`VERCEL_PROJECT_ID` are set).
+
+- **Posts** — MDX editor with metadata form, Shiki-highlighted live preview,
+  drafts (hidden from index/RSS/sitemap/chat), publish-by-commit.
+- **Media** — uploads resized + EXIF-stripped in the browser, committed to
+  `public/images/<folder>/`; raster-only, 4 MB cap.
+- **Projects / Bio / Story / Gallery** — structured editors validated by the
+  exact zod schemas the site builds with; project ids lock after first save
+  (they're the AI's `focusProject` handles). Resume PDF upload included.
+
+Without `GITHUB_TOKEN`/`GITHUB_REPO`, the admin writes to the local working
+tree instead — fully usable in dev. Admin writes are rate-limited (30/min)
+as a runaway backstop.
+
+Extra env for the admin: `GITHUB_TOKEN` (fine-grained PAT, this repo, Contents
+RW), `GITHUB_REPO`, optional `GITHUB_BRANCH`, `VERCEL_TOKEN`,
+`VERCEL_PROJECT_ID` (and `VERCEL_TEAM_ID` for team projects).
 
 ## Architecture
 

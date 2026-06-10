@@ -13,6 +13,7 @@ import {
   deleteFile,
   ghJson,
   repoConfig,
+  commitUrl,
   GitHubConfigError,
 } from "@/lib/github";
 
@@ -90,7 +91,7 @@ export async function listMedia(): Promise<MediaItem[]> {
 
 export async function uploadMedia(
   input: z.infer<typeof uploadSchema>,
-): Promise<{ path: string; mode: "github" | "local" }> {
+): Promise<{ path: string; mode: "github" | "local"; commitUrl?: string }> {
   const { folder, fileName, base64 } = uploadSchema.parse(input);
   const bytes = Math.floor(base64.length * 0.75);
   if (bytes > MAX_UPLOAD_BYTES) {
@@ -101,11 +102,11 @@ export async function uploadMedia(
   const sitePath = `/images/${folder}/${fileName}`;
 
   if (isGitHubMode()) {
-    await commitFiles(
+    const { commitSha } = await commitFiles(
       [{ path: repoPath, content: base64, encoding: "base64" }],
       `content(media): add ${folder}/${fileName}`,
     );
-    return { path: sitePath, mode: "github" };
+    return { path: sitePath, mode: "github", commitUrl: commitUrl(commitSha) };
   }
 
   const dir = join(process.cwd(), "public/images", folder);

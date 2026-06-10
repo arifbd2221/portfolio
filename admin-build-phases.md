@@ -202,6 +202,28 @@ grounding) can be changed end-to-end from the admin.
 
 ---
 
+## Security model (post-A5 review)
+
+A 9-agent adversarial security review ran over the whole write-path. Outcome:
+
+- **Enforced auth boundary** = the admin layout (`await auth()` → redirect,
+  verified in production) + every server action calling
+  `requireAdminSession`/`requireAdminWrite`. Server actions are the only write
+  surface; there are no `/api/admin` routes. `proxy.ts` is an optimistic outer
+  net only — middleware execution is unreliable under Next 16 + next-auth beta,
+  so security never depends on it.
+- **JSON-LD hardening:** `<` is escaped in the JSON-LD `<script>` so an
+  admin-edited bio field containing `</script>` can't break out.
+- **blurDataURL** is constrained to base64 PNG/JPEG/WebP (no SVG/other URIs).
+- **Accepted risk — MDX executes JSX by design:** a blog post can contain
+  arbitrary JSX/components (that's the point of MDX). The only author is the
+  single trusted admin, who already controls the repo/source — so MDX content
+  is exactly as trusted as the codebase. No sanitization is applied (it would
+  break Callout/components). If a multi-author or less-trusted editor is ever
+  added, switch posts to sanitized Markdown or an allowlisted component set.
+- **Rate limiting:** admin writes are capped (30/min) as a runaway backstop;
+  unauthenticated traffic never reaches a write.
+
 ## Don't get these wrong
 
 - Proxy is not enough — **every** admin route handler re-checks `auth()`.

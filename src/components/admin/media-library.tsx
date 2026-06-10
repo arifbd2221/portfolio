@@ -89,7 +89,7 @@ export function MediaLibrary({ rawBase, onPick, defaultFolder = "blog" }: MediaL
             setMessage({ kind: "error", text: result.error ?? "Upload failed." });
             return;
           }
-          setMessage(savedMessage(result.mode));
+          setMessage(savedMessage(result.mode, result.commitUrl));
         } catch (err) {
           setMessage({
             kind: "error",

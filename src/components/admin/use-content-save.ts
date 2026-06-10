@@ -20,7 +20,7 @@ export function useContentSave(name: ContentName, sha: string | null) {
         setMessage({ kind: "error", text: result.error ?? "Save failed." });
         return;
       }
-      setMessage(savedMessage(result.mode));
+      setMessage(savedMessage(result.mode, result.commitUrl));
       router.refresh();
     });
   }

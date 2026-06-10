@@ -4,12 +4,13 @@ import { useEffect, useState, type ComponentType } from "react";
 import * as runtime from "react/jsx-runtime";
 import { evaluate } from "@mdx-js/mdx";
 import remarkGfm from "remark-gfm";
+import rehypePrettyCode from "rehype-pretty-code";
 import { Callout } from "@/components/mdx/callout";
 
 /**
- * Live MDX preview, compiled in the browser (debounced). Prose styling +
- * the Callout component match the real post layout; code blocks render
- * unhighlighted here — Shiki fidelity arrives with the deployed build.
+ * Live MDX preview, compiled in the browser (debounced), with the same Shiki
+ * theme as the deployed build (rehype-pretty-code runs client-side here — the
+ * highlighter loads lazily inside this already-lazy admin chunk).
  */
 export default function MdxPreview({ source }: { source: string }) {
   const [Content, setContent] = useState<ComponentType | null>(null);
@@ -22,6 +23,12 @@ export default function MdxPreview({ source }: { source: string }) {
         const mod = await evaluate(source, {
           ...runtime,
           remarkPlugins: [remarkGfm],
+          rehypePlugins: [
+            [
+              rehypePrettyCode,
+              { theme: "github-dark-dimmed", keepBackground: true },
+            ],
+          ],
           useMDXComponents: () => ({ Callout }),
         });
         if (!cancelled) {

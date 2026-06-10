@@ -55,6 +55,11 @@ export function repoConfig() {
   return config();
 }
 
+/** Web URL of a commit (for "view commit" links after admin saves). */
+export function commitUrl(sha: string): string {
+  return `https://github.com/${config().repo}/commit/${sha}`;
+}
+
 export interface RepoFile {
   path: string;
   /** UTF-8 decoded content. */

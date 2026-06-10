@@ -18,7 +18,14 @@ export const galleryImageSchema = z.object({
   caption: z.string().optional(),
   width: z.number().int().positive(),
   height: z.number().int().positive(),
-  blurDataURL: z.string().startsWith("data:image/"),
+  // Base64 raster only (PNG/JPEG/WebP) — matches what the admin/backfill
+  // generate. Excludes SVG and other data: URIs as input-validation hygiene.
+  blurDataURL: z
+    .string()
+    .regex(
+      /^data:image\/(png|jpe?g|webp);base64,[A-Za-z0-9+/=]+$/,
+      "must be a base64 PNG/JPEG/WebP data URI",
+    ),
 });
 
 export type GalleryImage = z.infer<typeof galleryImageSchema>;
