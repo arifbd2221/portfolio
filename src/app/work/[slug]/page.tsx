@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { projects, getProjectBySlug } from "@/content/projects";
-import { hueFromId } from "@/lib/utils";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -35,7 +35,6 @@ export default async function WorkDetailPage({ params }: PageProps) {
   const project = getProjectBySlug(slug);
   if (!project) notFound();
 
-  const hue = hueFromId(project.id);
   const paragraphs = project.body.split(/\n{2,}/).filter(Boolean);
 
   return (
@@ -59,13 +58,16 @@ export default async function WorkDetailPage({ params }: PageProps) {
         </p>
       </header>
 
-      <div
-        className="mt-10 aspect-[16/7] w-full rounded-2xl border border-border"
-        style={{
-          background: `radial-gradient(120% 120% at 30% 20%, oklch(0.6 0.2 ${hue}) 0%, oklch(0.4 0.16 ${(hue + 40) % 360}) 50%, oklch(0.2 0.05 ${hue}) 100%)`,
-        }}
-        aria-hidden="true"
-      />
+      <div className="relative mt-10 aspect-[16/7] w-full overflow-hidden rounded-2xl border border-border bg-surface">
+        <Image
+          src={project.cover}
+          alt=""
+          fill
+          sizes="(max-width: 768px) 100vw, 768px"
+          className="object-cover"
+          priority
+        />
+      </div>
 
       <ul className="mt-8 flex flex-wrap gap-2">
         {project.tags.map((tag) => (

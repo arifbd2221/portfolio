@@ -1,10 +1,10 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useIsomorphicLayoutEffect } from "@/lib/use-isomorphic-layout-effect";
-import { hueFromId } from "@/lib/utils";
 import type { StoryBeat } from "@/content/story";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -101,43 +101,41 @@ export function StoryTrack({ beats }: { beats: StoryBeat[] }) {
 
   return (
     <div ref={rootRef} className="relative">
-      {beats.map((beat) => {
-        const hue = hueFromId(beat.id);
-        return (
-          <article
-            key={beat.id}
-            data-beat
-            className="relative flex min-h-screen w-full items-center justify-center overflow-hidden"
-          >
-            {/* PLACEHOLDER "photo" — swap for a next/image fill at beat.image,
-                preloading the first/next beat (priority). The scrim below keeps
-                text legible over any image. */}
-            <div
-              data-beat-image
-              aria-hidden="true"
-              className="absolute inset-0"
-              style={{
-                background: `linear-gradient(135deg, oklch(0.36 0.13 ${hue}) 0%, oklch(0.18 0.06 ${(hue + 30) % 360}) 100%)`,
-              }}
+      {beats.map((beat, i) => (
+        <article
+          key={beat.id}
+          data-beat
+          className="relative flex min-h-screen w-full items-center justify-center overflow-hidden"
+        >
+          {/* DEMO photo — replace beat.image with your own. The scrim below
+              keeps the text legible over any image. */}
+          <div data-beat-image aria-hidden="true" className="absolute inset-0">
+            <Image
+              src={beat.image}
+              alt=""
+              fill
+              sizes="100vw"
+              priority={i === 0}
+              className="object-cover"
             />
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/45"
-            />
-            <div className="relative z-10 mx-auto max-w-2xl px-6 text-center">
-              <p className="font-mono text-xs uppercase tracking-widest text-white/70">
-                {beat.kicker}
-              </p>
-              <h3 className="mt-3 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
-                {beat.heading}
-              </h3>
-              <p className="mt-4 text-lg leading-relaxed text-white/85">
-                {beat.body}
-              </p>
-            </div>
-          </article>
-        );
-      })}
+          </div>
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/35 to-black/50"
+          />
+          <div className="relative z-10 mx-auto max-w-2xl px-6 text-center">
+            <p className="font-mono text-xs uppercase tracking-widest text-white/70">
+              {beat.kicker}
+            </p>
+            <h3 className="mt-3 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+              {beat.heading}
+            </h3>
+            <p className="mt-4 text-lg leading-relaxed text-white/85">
+              {beat.body}
+            </p>
+          </div>
+        </article>
+      ))}
     </div>
   );
 }

@@ -1,13 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "motion/react";
 import type { Project } from "@/content/projects";
-import { hueFromId } from "@/lib/utils";
 
 export function ProjectCard({ project }: { project: Project }) {
-  const hue = hueFromId(project.id);
-
   return (
     <motion.article
       whileHover={{ y: -6 }}
@@ -17,16 +15,14 @@ export function ProjectCard({ project }: { project: Project }) {
         href={`/work/${project.slug}`}
         className="group block overflow-hidden rounded-2xl border border-border bg-surface/40 transition-colors hover:border-accent/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       >
-        {/* Cover placeholder — swap for next/image once /public/images/projects exists. */}
-        <div
-          className="relative aspect-[16/10] w-full overflow-hidden"
-          style={{
-            background: `radial-gradient(120% 120% at 30% 20%, oklch(0.6 0.2 ${hue}) 0%, oklch(0.45 0.18 ${(hue + 40) % 360}) 45%, oklch(0.22 0.06 ${hue}) 100%)`,
-          }}
-        >
-          <span className="absolute bottom-3 right-4 font-mono text-6xl font-bold text-white/15 transition-transform duration-500 group-hover:scale-110">
-            {project.title.charAt(0)}
-          </span>
+        <div className="relative aspect-[16/10] w-full overflow-hidden bg-surface">
+          <Image
+            src={project.cover}
+            alt=""
+            fill
+            sizes="(max-width: 640px) 100vw, 50vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+          />
         </div>
 
         <div className="p-5">

@@ -1,14 +1,14 @@
 import type { StaticImageData } from "next/image";
 
 // Static imports → next/image generates width/height + a real blur placeholder.
-// PLACEHOLDER rasters (see scripts/gen-gallery-placeholders.mjs). Replace the
-// files in public/images/gallery with real photos (keep filenames or update here).
-import photo1 from "../../public/images/gallery/photo-1.png";
-import photo2 from "../../public/images/gallery/photo-2.png";
-import photo3 from "../../public/images/gallery/photo-3.png";
-import photo4 from "../../public/images/gallery/photo-4.png";
-import photo5 from "../../public/images/gallery/photo-5.png";
-import photo6 from "../../public/images/gallery/photo-6.png";
+// DEMO photos (Lorem Picsum). Replace the files in public/images/gallery with
+// your real photos (keep the filenames, or update these imports).
+import photo1 from "../../public/images/gallery/photo-1.jpg";
+import photo2 from "../../public/images/gallery/photo-2.jpg";
+import photo3 from "../../public/images/gallery/photo-3.jpg";
+import photo4 from "../../public/images/gallery/photo-4.jpg";
+import photo5 from "../../public/images/gallery/photo-5.jpg";
+import photo6 from "../../public/images/gallery/photo-6.jpg";
 
 /**
  * Curated photo gallery (Phase 6). Single source of truth for site photography;
