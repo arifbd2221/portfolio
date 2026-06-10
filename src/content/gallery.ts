@@ -10,7 +10,7 @@ import raw from "./gallery.json";
  * upload time; `scripts/backfill-image-meta.mjs` covers hand-dropped files),
  * giving next/image the same blur-up UX as static imports without them.
  */
-const galleryImageSchema = z.object({
+export const galleryImageSchema = z.object({
   /** Stable id, so the Story section can reference a shared photo. */
   id: z.string().regex(/^[a-z0-9-]+$/),
   src: z.string().startsWith("/"),

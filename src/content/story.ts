@@ -14,7 +14,7 @@ const storyBeatSchema = z.object({
   body: z.string().min(1),
 });
 
-const storySchema = z.object({
+export const storySchema = z.object({
   beats: z.array(storyBeatSchema).min(1),
 });
 

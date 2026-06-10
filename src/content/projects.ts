@@ -13,7 +13,7 @@ const projectLinkSchema = z.object({
   href: z.string().url(),
 });
 
-const projectSchema = z.object({
+export const projectSchema = z.object({
   /** Stable, lowercase, kebab-case. AI + 3D scene target this. */
   id: z.string().regex(/^[a-z0-9-]+$/),
   title: z.string().min(1),
@@ -30,7 +30,7 @@ const projectSchema = z.object({
   body: z.string(),
 });
 
-const projectsSchema = z
+export const projectsSchema = z
   .array(projectSchema)
   .superRefine((list, ctx) => {
     const ids = new Set<string>();

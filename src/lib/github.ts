@@ -44,6 +44,17 @@ async function gh(path: string, init?: RequestInit): Promise<Response> {
   return res;
 }
 
+/** Authenticated GET returning parsed JSON (admin/server use only). */
+export async function ghJson<T>(path: string): Promise<T> {
+  const res = await gh(path);
+  if (!res.ok) throw new Error(`GitHub request failed (${res.status}): ${path}`);
+  return (await res.json()) as T;
+}
+
+export function repoConfig() {
+  return config();
+}
+
 export interface RepoFile {
   path: string;
   /** UTF-8 decoded content. */
