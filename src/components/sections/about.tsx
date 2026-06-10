@@ -1,5 +1,6 @@
 import { Section } from "@/components/section";
 import { Reveal } from "@/components/reveal";
+import { AboutPortrait } from "@/components/about-portrait";
 import { bio } from "@/content/bio";
 
 export function About() {
@@ -40,18 +41,7 @@ export function About() {
           </ul>
         </Reveal>
 
-        <Reveal delaySeconds={0.08}>
-          {/* Portrait placeholder — swap for next/image at {bio.portrait}. */}
-          <div
-            className="aspect-[3/4] w-full overflow-hidden rounded-2xl border border-border"
-            style={{
-              background:
-                "radial-gradient(120% 120% at 50% 0%, oklch(0.6 0.2 285) 0%, oklch(0.3 0.1 285) 60%, oklch(0.2 0.04 285) 100%)",
-            }}
-            aria-label={`Portrait of ${bio.name} (placeholder)`}
-            role="img"
-          />
-        </Reveal>
+        <AboutPortrait />
       </div>
     </Section>
   );
