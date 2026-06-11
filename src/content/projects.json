@@ -8,7 +8,7 @@
     "role": "Creator",
     "year": 2026,
     "links": [{ "label": "GitHub", "href": "https://github.com/arifbd2221/cswitch" }],
-    "cover": "/images/projects/cswitch.jpg",
+    "cover": "/images/projects/cswitch.png",
     "body": "A small, fast command-line tool that lets you keep several Claude Code accounts side by side and switch between them instantly — no more logging out and back in. Written in Go for a single self-contained binary.\n\n(Expand this case study with the problem it solved for you, how it works, and what you learned.)"
   },
   {
@@ -20,7 +20,7 @@
     "role": "Creator",
     "year": 2024,
     "links": [{ "label": "GitHub", "href": "https://github.com/arifbd2221/django_testcase_generator" }],
-    "cover": "/images/projects/django-testcase-generator.jpg",
+    "cover": "/images/projects/django-testcase-generator.png",
     "body": "A developer-experience tool that reads a Django project's URL configuration and scaffolds test cases for each route, so a codebase gets baseline test coverage with far less boilerplate.\n\n(Expand this case study with the approach and impact.)"
   },
   {
@@ -32,7 +32,7 @@
     "role": "Creator",
     "year": 2019,
     "links": [{ "label": "GitHub", "href": "https://github.com/arifbd2221/E-commerce-Django-Tokenized-Restful-Api" }],
-    "cover": "/images/projects/ecommerce-django-rest-api.jpg",
+    "cover": "/images/projects/ecommerce-django-rest-api.png",
     "body": "A backend for an e-commerce platform: token-secured REST endpoints for products, carts, and orders, built on Django REST Framework.\n\n(Expand this case study with the data model, auth flow, and anything notable.)"
   },
   {
@@ -44,7 +44,7 @@
     "role": "Creator",
     "year": 2022,
     "links": [{ "label": "GitHub", "href": "https://github.com/arifbd2221/Django-Graphql-Reactjs" }],
-    "cover": "/images/projects/django-graphql-react.jpg",
+    "cover": "/images/projects/django-graphql-react.png",
     "body": "A full-stack example wiring a Django GraphQL API to a React client — schema-driven data fetching end to end.\n\n(Expand this case study with what it demonstrates and the trade-offs you hit.)"
   }
 ]
