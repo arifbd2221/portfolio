@@ -1,8 +1,8 @@
 {
   "name": "Mohidul Hoque Arif",
   "role": "Senior Software Engineer · SDS Manager",
-  "tagline": "I build robust backends, APIs, and developer tools — six years and counting.",
-  "summary": "I'm a software engineer with 6+ years of experience, currently a Senior Software Engineer at SDS Manager. I work across Python/Django, Go, and JavaScript — building token-secured REST and GraphQL APIs, automation, and developer tooling that makes teams faster.",
+  "tagline": "I build robust backends, APIs, and the cloud infrastructure that scales them.",
+  "summary": "I'm a Senior Software Engineer at SDS Manager with 6+ years building backend services, APIs, and business-analytical tools. I work full-stack — Python (Django, FastAPI), Go, and TypeScript/React — with a focus on cloud-native infrastructure on AWS using Docker, Kubernetes, and Terraform. Outside work, I travel and listen to podcasts on tech, entrepreneurship, and self-improvement.",
   "email": "mohidul@sdsmanager.com",
   "location": "Bangladesh",
   "portrait": "/images/portrait.jpg",
@@ -10,16 +10,21 @@
     "Python",
     "Django",
     "Django REST Framework",
-    "GraphQL",
+    "FastAPI",
     "Go",
-    "JavaScript",
+    "TypeScript",
     "React",
-    "Java",
-    "REST API design",
-    "Automation & CLI tooling"
+    "GraphQL",
+    "AWS",
+    "Docker",
+    "Kubernetes",
+    "Terraform"
   ],
   "resumeUrl": "/resume.pdf",
   "socials": [
-    { "label": "GitHub", "href": "https://github.com/arifbd2221" }
+    { "label": "GitHub", "href": "https://github.com/arifbd2221" },
+    { "label": "LinkedIn", "href": "https://linkedin.com/in/mohidulhaquearif" },
+    { "label": "Stack Overflow", "href": "https://stackoverflow.com/users/6128051" },
+    { "label": "Medium", "href": "https://medium.com/@mohidulhoque216" }
   ]
 }
